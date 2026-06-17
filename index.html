@@ -143,10 +143,10 @@
 
   .doc-action {
     flex-shrink: 0;
-    font-size: 13px;
+    font-size: 12.5px;
     color: var(--navy);
     border: 1px solid var(--navy);
-    padding: 7px 16px;
+    padding: 7px 12px;
     border-radius: 20px;
     white-space: nowrap;
   }
@@ -172,8 +172,14 @@
   }
 
   @media (max-width: 520px) {
-    .doc-card { flex-wrap: wrap; }
-    .doc-action { margin-left: 62px; }
+    .doc-card {
+      flex-wrap: wrap;
+      padding: 16px 18px;
+    }
+    .doc-action {
+      margin-left: 62px;
+      margin-top: 4px;
+    }
   }
 </style>
 </head>
@@ -188,8 +194,7 @@
 <main>
   <div class="intro">
     こちらは新クラブ設立に関する資料を一覧でご覧いただけるページです。<br>
-    各資料名をクリックすると、ブラウザで開く、または保存（ダウンロード）ができます。<br>
-    新しい資料は自動的にこの一覧へ追加されます。
+    資料名をタップすると保存されます。保存後、画面に出る通知（または「ダウンロード」フォルダ）からファイルを開いてご覧ください。
   </div>
 
   <div class="doc-list" id="doc-list">
@@ -260,10 +265,7 @@
               <div class="doc-title">${name}</div>
               <div class="doc-meta">${type.label}</div>
             </div>
-            <div class="doc-action">開く</div>
-          </a>
-        `;
-      }).join("");
+            <div class="doc-action">タップして保存</div>
 
     } catch (err) {
       listEl.innerHTML = `<div class="state-msg">資料の読み込みに失敗しました。時間を置いて再度お試しください。</div>`;
