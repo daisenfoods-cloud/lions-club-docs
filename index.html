@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ライオンズクラブ 資料一覧</title>
+<style>
+  :root {
+    --navy: #1a3a5c;
+    --navy-deep: #122a44;
+    --gold: #c9a356;
+    --paper: #faf8f4;
+    --ink: #2b2b2b;
+    --ink-soft: #6b6b6b;
+    --line: #e3ddd0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.7;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 100%);
+    color: #fff;
+    padding: 56px 24px 64px;
+    text-align: center;
+    position: relative;
+  }
+
+  header::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), transparent, var(--gold));
+  }
+
+  .emblem {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 18px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+
+  header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+  }
+
+  header p {
+    color: #cdd8e6;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+  }
+
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  .intro {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--gold);
+    padding: 20px 24px;
+    margin-bottom: 36px;
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    border-radius: 2px;
+  }
+
+  .doc-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .doc-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  }
+
+  .doc-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(26, 58, 92, 0.08);
+  }
+
+  .doc-icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .icon-docx { background: #2b579a; }
+  .icon-pdf  { background: #c0392b; }
+  .icon-odt  { background: #5a8f6e; }
+
+  .doc-info { flex: 1; min-width: 0; }
+
+  .doc-title {
+    font-size: 15.5px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    word-break: break-word;
+  }
+
+  .doc-meta {
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+
+  .doc-action {
+    flex-shrink: 0;
+    font-size: 13px;
+    color: var(--navy);
+    border: 1px solid var(--navy);
+    padding: 7px 16px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .doc-card:hover .doc-action {
+    background: var(--navy);
+    color: #fff;
+  }
+
+  footer {
+    text-align: center;
+    padding: 32px 20px 48px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+  }
+
+  @media (max-width: 520px) {
+    .doc-card { flex-wrap: wrap; }
+    .doc-action { margin-left: 62px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="emblem">🦁</div>
+  <h1>ライオンズクラブ 資料一覧</h1>
+  <p>ご覧になりたい資料をクリックしてください</p>
+</header>
+
+<main>
+  <div class="intro">
+    こちらは新クラブ設立に関する資料を一覧でご覧いただけるページです。<br>
+    各資料名をクリックすると、ブラウザで開く、または保存（ダウンロード）ができます。
+  </div>
+
+  <div class="doc-list">
+
+    <a class="doc-card" href="r8,6,17報告資料.docx" download>
+      <div class="doc-icon icon-docx">W</div>
+      <div class="doc-info">
+        <div class="doc-title">6月17日 決定事項のご報告</div>
+        <div class="doc-meta">Word文書（.docx）</div>
+      </div>
+      <div class="doc-action">開く</div>
+    </a>
+
+    <a class="doc-card" href="lions_service_activities.pdf" download>
+      <div class="doc-icon icon-pdf">P</div>
+      <div class="doc-info">
+        <div class="doc-title">奉仕活動（アクティビティ）資料</div>
+        <div class="doc-meta">PDFファイル</div>
+      </div>
+      <div class="doc-action">開く</div>
+    </a>
+
+    <a class="doc-card" href="lions_club_20_social_issues.docx" download>
+      <div class="doc-icon icon-docx">W</div>
+      <div class="doc-info">
+        <div class="doc-title">ライオンズクラブと20の社会課題</div>
+        <div class="doc-meta">Word文書（.docx）</div>
+      </div>
+      <div class="doc-action">開く</div>
+    </a>
+
+    <a class="doc-card" href="ライオンズクラブならではの奉仕活動についての考察.odt" download>
+      <div class="doc-icon icon-odt">O</div>
+      <div class="doc-info">
+        <div class="doc-title">ライオンズクラブならではの奉仕活動についての考察</div>
+        <div class="doc-meta">OpenDocument文書（.odt）</div>
+      </div>
+      <div class="doc-action">開く</div>
+    </a>
+
+  </div>
+</main>
+
+<footer>
+  資料に関するお問い合わせは木元までご連絡ください
+</footer>
+
+</body>
+</html>
