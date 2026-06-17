@@ -188,7 +188,7 @@
 <header>
   <div class="emblem">🦁</div>
   <h1>ライオンズクラブ 資料一覧</h1>
-  <p>ご覧になりたい資料をクリックしてください</p>
+  <p>ご覧になりたい資料をタップしてください</p>
 </header>
 
 <main>
@@ -207,13 +207,6 @@
 </footer>
 
 <script>
-  // ===== 設定 =====
-  const OWNER = "daisenfoods-cloud";
-  const REPO = "lions-club-docs";
-  const BRANCH = "main";
-  // index.html や README.md など、一覧に出したくないファイル名
-  const EXCLUDE = ["index.html", "README.md", ".gitignore"];
-
   // 拡張子ごとのアイコン・表示名
   const FILE_TYPES = {
     docx: { icon: "icon-docx", label: "Word", text: "W" },
@@ -229,43 +222,33 @@
     return FILE_TYPES[ext] || { icon: "icon-file", label: ext.toUpperCase(), text: "?" };
   }
 
-  function displayName(filename) {
-    // 拡張子を除いたファイル名を表示名にする
-    return filename.replace(/\.[^/.]+$/, "");
-  }
-
   async function loadFiles() {
     const listEl = document.getElementById("doc-list");
     try {
-      const res = await fetch(
-        `https://api.github.com/repos/${OWNER}/${REPO}/contents/?ref=${BRANCH}`
-      );
+      // files.json をこのページと同じ場所から読み込む（GitHub APIは使わない）
+      const res = await fetch("files.json", { cache: "no-store" });
       if (!res.ok) throw new Error("読み込みに失敗しました");
-      const items = await res.json();
+      const files = await res.json();
 
-      const files = items
-        .filter(item => item.type === "file")
-        .filter(item => !EXCLUDE.includes(item.name))
-        .sort((a, b) => a.name.localeCompare(b.name, "ja"));
-
-      if (files.length === 0) {
+      if (!files || files.length === 0) {
         listEl.innerHTML = `<div class="state-msg">資料はまだありません</div>`;
         return;
       }
 
-      listEl.innerHTML = files.map(file => {
-        const type = getFileType(file.name);
-        const name = displayName(file.name);
-        // ダウンロードURL（raw）
-        const url = file.download_url;
+      listEl.innerHTML = files.map(entry => {
+        const type = getFileType(entry.file);
+        const url = encodeURI(entry.file);
         return `
           <a class="doc-card" href="${url}" download>
             <div class="doc-icon ${type.icon}">${type.text}</div>
             <div class="doc-info">
-              <div class="doc-title">${name}</div>
+              <div class="doc-title">${entry.title}</div>
               <div class="doc-meta">${type.label}</div>
             </div>
             <div class="doc-action">タップして保存</div>
+          </a>
+        `;
+      }).join("");
 
     } catch (err) {
       listEl.innerHTML = `<div class="state-msg">資料の読み込みに失敗しました。時間を置いて再度お試しください。</div>`;
