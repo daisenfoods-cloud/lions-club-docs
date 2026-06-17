@@ -123,6 +123,9 @@
   .icon-docx { background: #2b579a; }
   .icon-pdf  { background: #c0392b; }
   .icon-odt  { background: #5a8f6e; }
+  .icon-xlsx { background: #1d6f42; }
+  .icon-pptx { background: #b7472a; }
+  .icon-file { background: #7a7a7a; }
 
   .doc-info { flex: 1; min-width: 0; }
 
@@ -153,6 +156,13 @@
     color: #fff;
   }
 
+  .state-msg {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+
   footer {
     text-align: center;
     padding: 32px 20px 48px;
@@ -178,53 +188,91 @@
 <main>
   <div class="intro">
     こちらは新クラブ設立に関する資料を一覧でご覧いただけるページです。<br>
-    各資料名をクリックすると、ブラウザで開く、または保存（ダウンロード）ができます。
+    各資料名をクリックすると、ブラウザで開く、または保存（ダウンロード）ができます。<br>
+    新しい資料は自動的にこの一覧へ追加されます。
   </div>
 
-  <div class="doc-list">
-
-    <a class="doc-card" href="r8,6,17報告資料.docx" download>
-      <div class="doc-icon icon-docx">W</div>
-      <div class="doc-info">
-        <div class="doc-title">6月17日 決定事項のご報告</div>
-        <div class="doc-meta">Word文書（.docx）</div>
-      </div>
-      <div class="doc-action">開く</div>
-    </a>
-
-    <a class="doc-card" href="lions_service_activities.pdf" download>
-      <div class="doc-icon icon-pdf">P</div>
-      <div class="doc-info">
-        <div class="doc-title">奉仕活動（アクティビティ）資料</div>
-        <div class="doc-meta">PDFファイル</div>
-      </div>
-      <div class="doc-action">開く</div>
-    </a>
-
-    <a class="doc-card" href="lions_club_20_social_issues.docx" download>
-      <div class="doc-icon icon-docx">W</div>
-      <div class="doc-info">
-        <div class="doc-title">ライオンズクラブと20の社会課題</div>
-        <div class="doc-meta">Word文書（.docx）</div>
-      </div>
-      <div class="doc-action">開く</div>
-    </a>
-
-    <a class="doc-card" href="ライオンズクラブならではの奉仕活動についての考察.odt" download>
-      <div class="doc-icon icon-odt">O</div>
-      <div class="doc-info">
-        <div class="doc-title">ライオンズクラブならではの奉仕活動についての考察</div>
-        <div class="doc-meta">OpenDocument文書（.odt）</div>
-      </div>
-      <div class="doc-action">開く</div>
-    </a>
-
+  <div class="doc-list" id="doc-list">
+    <div class="state-msg">資料を読み込んでいます…</div>
   </div>
 </main>
 
 <footer>
   資料に関するお問い合わせは木元までご連絡ください
 </footer>
+
+<script>
+  // ===== 設定 =====
+  const OWNER = "daisenfoods-cloud";
+  const REPO = "lions-club-docs";
+  const BRANCH = "main";
+  // index.html や README.md など、一覧に出したくないファイル名
+  const EXCLUDE = ["index.html", "README.md", ".gitignore"];
+
+  // 拡張子ごとのアイコン・表示名
+  const FILE_TYPES = {
+    docx: { icon: "icon-docx", label: "Word", text: "W" },
+    doc:  { icon: "icon-docx", label: "Word", text: "W" },
+    pdf:  { icon: "icon-pdf",  label: "PDF",  text: "P" },
+    odt:  { icon: "icon-odt",  label: "OpenDocument", text: "O" },
+    xlsx: { icon: "icon-xlsx", label: "Excel", text: "X" },
+    pptx: { icon: "icon-pptx", label: "PowerPoint", text: "S" },
+  };
+
+  function getFileType(filename) {
+    const ext = filename.split(".").pop().toLowerCase();
+    return FILE_TYPES[ext] || { icon: "icon-file", label: ext.toUpperCase(), text: "?" };
+  }
+
+  function displayName(filename) {
+    // 拡張子を除いたファイル名を表示名にする
+    return filename.replace(/\.[^/.]+$/, "");
+  }
+
+  async function loadFiles() {
+    const listEl = document.getElementById("doc-list");
+    try {
+      const res = await fetch(
+        `https://api.github.com/repos/${OWNER}/${REPO}/contents/?ref=${BRANCH}`
+      );
+      if (!res.ok) throw new Error("読み込みに失敗しました");
+      const items = await res.json();
+
+      const files = items
+        .filter(item => item.type === "file")
+        .filter(item => !EXCLUDE.includes(item.name))
+        .sort((a, b) => a.name.localeCompare(b.name, "ja"));
+
+      if (files.length === 0) {
+        listEl.innerHTML = `<div class="state-msg">資料はまだありません</div>`;
+        return;
+      }
+
+      listEl.innerHTML = files.map(file => {
+        const type = getFileType(file.name);
+        const name = displayName(file.name);
+        // ダウンロードURL（raw）
+        const url = file.download_url;
+        return `
+          <a class="doc-card" href="${url}" download>
+            <div class="doc-icon ${type.icon}">${type.text}</div>
+            <div class="doc-info">
+              <div class="doc-title">${name}</div>
+              <div class="doc-meta">${type.label}</div>
+            </div>
+            <div class="doc-action">開く</div>
+          </a>
+        `;
+      }).join("");
+
+    } catch (err) {
+      listEl.innerHTML = `<div class="state-msg">資料の読み込みに失敗しました。時間を置いて再度お試しください。</div>`;
+      console.error(err);
+    }
+  }
+
+  loadFiles();
+</script>
 
 </body>
 </html>
