@@ -156,6 +156,36 @@
     color: #fff;
   }
 
+  .doc-card-pdf {
+    cursor: default;
+  }
+
+  .doc-action-group {
+    flex-shrink: 0;
+    display: flex;
+    gap: 8px;
+  }
+
+  .doc-action-group .doc-action {
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .doc-action-group .doc-action:hover {
+    background: var(--navy);
+    color: #fff;
+  }
+
+  .doc-action-primary {
+    background: var(--navy);
+    color: #fff !important;
+    border-color: var(--navy);
+  }
+
+  .doc-action-primary:hover {
+    background: var(--navy-deep) !important;
+  }
+
   .state-msg {
     text-align: center;
     padding: 40px 20px;
@@ -180,6 +210,13 @@
       margin-left: 62px;
       margin-top: 4px;
     }
+    .doc-card-pdf {
+      flex-wrap: wrap;
+    }
+    .doc-action-group {
+      margin-left: 62px;
+      margin-top: 8px;
+    }
   }
 </style>
 </head>
@@ -194,7 +231,8 @@
 <main>
   <div class="intro">
     こちらは新クラブ設立に関する資料を一覧でご覧いただけるページです。<br>
-    資料名をタップすると保存されます。保存後、画面に出る通知（または「ダウンロード」フォルダ）からファイルを開いてご覧ください。
+    PDFの資料は「見る」でそのまま画面に表示されます。「保存」をタップすると端末に保存されます。<br>
+    その他の資料は、タップすると保存され、保存後にファイルを開くとご覧いただけます。
   </div>
 
   <div class="doc-list" id="doc-list">
@@ -238,6 +276,25 @@
       listEl.innerHTML = files.map(entry => {
         const type = getFileType(entry.file);
         const url = encodeURI(entry.file);
+        const ext = entry.file.split(".").pop().toLowerCase();
+
+        if (ext === "pdf") {
+          // PDFはブラウザでそのまま開く「見る」と、保存用の「保存する」の2ボタン
+          return `
+            <div class="doc-card doc-card-pdf">
+              <div class="doc-icon ${type.icon}">${type.text}</div>
+              <div class="doc-info">
+                <div class="doc-title">${entry.title}</div>
+                <div class="doc-meta">${type.label}</div>
+              </div>
+              <div class="doc-action-group">
+                <a class="doc-action doc-action-primary" href="${url}" target="_blank" rel="noopener">見る</a>
+                <a class="doc-action" href="${url}" download>保存</a>
+              </div>
+            </div>
+          `;
+        }
+
         return `
           <a class="doc-card" href="${url}" download>
             <div class="doc-icon ${type.icon}">${type.text}</div>
