@@ -10,3 +10,4 @@
 
 - [2026年度年間行事計画表（上期）](meetings/lions_annual_schedule_2026h1.md)
 - [支部予定表（2026年度）](meetings/lions_club_branch_schedule_2026.md)
+- [ライオンズクラブ 例会 議事録（2026年8月5日）](meetings/lions_reikai_20260805.md)
